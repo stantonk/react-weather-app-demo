@@ -1,161 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 // import App from './App';
-import './index.css';
-import axios from 'axios';
+import "./index.css";
+import axios from "axios";
 
 // needs to be in main source file for React Developer Tools to work
 // http://stackoverflow.com/questions/26347489/react-dev-tools-not-loading-in-chrome-browser
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
     window.React = React;
 }
-
-
-// ReactDOM.render(
-//     <App />,
-//     document.getElementById('root')
-// );
-
-
-
-// const element = <h1>ninjas are great</h1>;
-// ReactDOM.render(
-//     element,
-//     document.getElementById('root')
-// );
-
-// function tick() {
-//     const el = (
-//         <div>
-//             <h1>A clock!</h1>
-//             <h1>{new Date().toLocaleTimeString()}</h1>
-//         </div>
-//     );
-//     ReactDOM.render(el, document.getElementById('root'));
-// }
-//
-// setInterval(tick, 1000);
-
-
-//
-//
-// function App(props) {
-//     return (
-//         <div>
-//             <Welcome name="Kevin" />
-//             <Welcome name="Batman" />
-//         </div>
-//     )
-// }
-//
-// ReactDOM.render(
-//     <App />,
-//     document.getElementById('root')
-// );
-
-function FormattedDate(props) {
-    return <h2>{props.date.toLocaleTimeString()}</h2>;
-}
-
-class Clock extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {date: new Date()};
-    }
-
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
-
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
-
-    tick() {
-        this.setState({date: new Date()});
-    }
-
-    render() {
-        return (
-            <div>
-                <FormattedDate date={this.state.date} />
-            </div>
-        );
-    }
-}
-
-class Toggle extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {isToggleOn: true};
-        // This binding is necessary to make `this` work in the callback
-        this.handleClick = this.handleClick.bind(this);
-
-        this.externalOnClickHandler = props.onClick;
-    }
-
-    handleClick() {
-        var state = null;
-        this.setState(prevState => {
-            state = !prevState.isToggleOn;
-            return ({
-                isToggleOn: state
-            })
-        });
-        this.externalOnClickHandler(state);
-    }
-
-    render() {
-        return (
-            <button onClick={this.handleClick}>
-                {this.state.isToggleOn ? 'ON' : 'OFF'}
-            </button>
-        );
-    }
-}
-
-class HideableClock extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {isClockShown: false};
-        this.handleToggleOnClick = this.handleToggleOnClick.bind(this);
-    }
-
-    handleToggleOnClick() {
-        this.setState(
-            prevState => ({isClockShown: !prevState.isClockShown})
-        );
-    }
-
-    render() {
-        const isVisible = this.state.isClockShown;
-        let clock = null;
-        if (isVisible) {
-            clock = <Clock />
-        } else {
-            clock = <div />
-        }
-        return (
-            <div>
-                <Toggle onClick={this.handleToggleOnClick}/>
-                {clock}
-            </div>
-        );
-    }
-}
-
-// const NumberList = props => {
-//     const items = props.numbers.map(n => <li key={n.toString()}>{n}</li>);
-//     return <ul>{items}</ul>;
-// }
-// ReactDOM.render(
-//     <NumberList numbers={[1,2,3,4,5]}/>,
-//     document.getElementById('root')
-// );
 
 const OPEN_WEATHER_MAP_APP_ID = "b1b15e88fa797225412429c1c50c122a1";
 const OPEN_WEATHER_MAP_API_KEY = "5fbdc15aa968e111e6591e9152309526";
@@ -169,6 +22,7 @@ class Weather extends React.Component {
     }
 
     getWeatherAndUpdateState() {
+        // this is not ideal :P
         var url = WEATHER_ENDPOINT+"?"+"q="+this.props.city+"&units=imperial"+"&appid="+OPEN_WEATHER_MAP_APP_ID+"&apikey="+OPEN_WEATHER_MAP_API_KEY;
         console.log(url);
         axios.get(url)
@@ -192,13 +46,13 @@ class Weather extends React.Component {
         }
     }
 
+    // http://stackoverflow.com/questions/7490660/converting-wind-direction-in-angles-to-text-words
     degToCompass(num) {
-        var val = Math.floor((num / 22.5) + .5);
+        var val = Math.floor((num / 22.5) + 0.5);
         var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
         var index = val % 16;
         return arr[index];
     }
-
 
     render() {
         var currentWeather = "Loading...";
@@ -265,8 +119,6 @@ class EditableWeather extends React.Component {
         );
     }
 }
-
-
 
 function App(props) {
     return (
